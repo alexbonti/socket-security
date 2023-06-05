@@ -12,9 +12,9 @@ const server = net.createServer((socket) => {
     socket.write('Server received your message!');
     setInterval(()=>{
         let randNumber=Math.floor(Math.random() * 10);
-        let message='Secret message :'+randNumber;
+        let message='Secret message: '+randNumber;
         socket.write(message);
-    },500)
+    },1000)
     // Close the connection
     //socket.end();
   });

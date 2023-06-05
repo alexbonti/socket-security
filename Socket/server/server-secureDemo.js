@@ -11,10 +11,10 @@ const server = net.createServer((socket) => {
     // Send a response back to the client
     socket.write('Server received your message!');
     setInterval(()=>{
-        let randNumber=Math.floor(Math.random() * 10);
-        let message=encrypt('Secret message :'+randNumber);
+        let randNumber = Math.floor(Math.random() * 10);
+        let message = encrypt('Secret message: '+randNumber);
         socket.write(message);
-    },500)
+    },1000)
     // Close the connection
     //socket.end();
   });
@@ -36,10 +36,11 @@ const crypto = require('crypto');
 
 // Generate a random encryption key
 const encryptionKey = crypto.randomBytes(32); // 32 bytes = 256 bits
+const iv = crypto.randomBytes(16); // 16 bytes = 128 bits
 
 // Encrypt the plaintext
 function encrypt(plaintext) {
-  const cipher = crypto.createCipher('aes-256-cbc', encryptionKey);
+  const cipher = crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
   let encrypted = cipher.update(plaintext, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   return encrypted;
@@ -47,7 +48,7 @@ function encrypt(plaintext) {
 
 // Decrypt the ciphertext
 function decrypt(ciphertext) {
-  const decipher = crypto.createDecipher('aes-256-cbc', encryptionKey);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', encryptionKey, iv);
   let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
